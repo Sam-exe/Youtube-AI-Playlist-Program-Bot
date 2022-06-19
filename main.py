@@ -55,13 +55,13 @@ class YoutubePlayer(QWidget):
         webpage.settings().setAttribute(QWebEngineSettings.PlaybackRequiresUserGesture, False)
 
         self.webview.setPage(webpage)
-        self.webview.load(QUrl(f"https://www.yout-ube.com/watch?v={self.video_id}"))
+        self.webview.load(QUrl(f"https://www.youtube.com./watch?v={self.video_id}"))
         #self.webview.setUrl(QUrl(f'https://www.youtube.com/embed/{self.video_id}?autoplay=1'))
         self.layout.addWidget(self.webview)
     
     def updateVideo(self, ):
         video_Id = self.input.text()
-        self.webview.load(QUrl(f"https://www.yout-ube.com/watch?v={video_Id}"))
+        self.webview.load(QUrl(f"https://www.yout-ube.com./watch?v={video_Id}"))
 
     def removePlayer(self):
         widget = self.sender().parent()
@@ -77,30 +77,6 @@ class YoutubePlayer(QWidget):
             players.append(player)
         for indx, player in enumerate(players[::-1]):
             self.parent.video.addWidget(player, indx % 3, indx // 3)
-    
-    
-    @QtCore.pyqtSlot(bool)
-    def on_loadFinished(self, ok):
-            print('working')
-            self.emulate_click(None, QtCore.QPoint(400, 200))
-
-    def emulate_click(self, widget, pos):
-        event_press = QtGui.QMouseEvent(
-            QtCore.QEvent.MouseButtonPress,
-            pos,
-            QtCore.Qt.LeftButton,
-            QtCore.Qt.LeftButton,
-            QtCore.Qt.NoModifier,
-        )
-        QtCore.QCoreApplication.postEvent(widget, event_press)
-        event_release = QtGui.QMouseEvent(
-            QtCore.QEvent.MouseButtonRelease,
-            pos,
-            QtCore.Qt.LeftButton,
-            QtCore.Qt.LeftButton,
-            QtCore.Qt.NoModifier,
-        )
-        QtCore.QCoreApplication.postEvent(widget, event_release)
 class YoutubeWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -114,7 +90,8 @@ class YoutubeWindow(QWidget):
 
         buttonAddPlayer = QPushButton('&Add player', clicked=self.addplayer)
         self.layout.addWidget(buttonAddPlayer)
-        buttonAddAccount = QPushButton('&Add Youtube account', clicked=self.addplayer)
+        buttonUserAccount = QPushButton('&User Account', clicked=self.GoogleAccount)
+        self.layout.addWidget(buttonUserAccount)
         self.video = QGridLayout()
         self.layout.addLayout(self.video)
 
@@ -130,9 +107,21 @@ class YoutubeWindow(QWidget):
 
         self.player = YoutubePlayer('', parent=self)
         self.video.addWidget(self.player, row, col)
+    def GoogleAccount(self):
+        self.webview = QWebEngineView()
+        
+        self.webview = QWebEngineView()
+        profile = QWebEngineProfile("my_profile", self.webview)
+        webpage = QWebEnginePage(profile, self.webview)
+        webpage.settings().setAttribute(QWebEngineSettings.PlaybackRequiresUserGesture, False)
 
+        self.webview.setPage(webpage)
+        self.webview.load(QUrl(f"https://accounts.google.com/SignOutOptions?hl=nl&continue=https://myaccount.google.com/%3Futm_source%3Daccount-marketing-page%26utm_medium%3Dgo-to-account-button%26pli%3D1"))
+
+        self.layout.addWidget(self.webview)      
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+
     window = YoutubeWindow()
     window.show()
 
