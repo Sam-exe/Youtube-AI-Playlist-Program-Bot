@@ -8,18 +8,6 @@ from adblockparser import AdblockRules
 
 __version__ = 'v1.1'
 __author__ = 'Sam.exe'
-
-with open("easylist.txt", "r",  encoding='utf8') as f:
-    raw_rules = f.readlines()
-    rules = AdblockRules(raw_rules)
-
-class WebEngineUrlRequestInterceptor(QtWebEngineCore.QWebEngineUrlRequestInterceptor):
-    def interceptRequest(self, info):
-        url = info.requestUrl().toString()
-        if rules.should_block(url):
-            print("block::::::::::::::::::::::", url)
-            info.block(True)
-
 class YoutubePlayer(QWidget):
     def __init__(self, video_id, parent=None):
         super().__init__()
@@ -67,13 +55,13 @@ class YoutubePlayer(QWidget):
         webpage.settings().setAttribute(QWebEngineSettings.PlaybackRequiresUserGesture, False)
 
         self.webview.setPage(webpage)
-        self.webview.load(QUrl(f"https://www.youtube.com/watch?v={self.video_id}aKCNrkERJ3E"))
+        self.webview.load(QUrl(f"https://www.yout-ube.com/watch?v={self.video_id}"))
         #self.webview.setUrl(QUrl(f'https://www.youtube.com/embed/{self.video_id}?autoplay=1'))
         self.layout.addWidget(self.webview)
     
     def updateVideo(self, ):
         video_Id = self.input.text()
-        self.webview.load(QUrl(f"https://www.youtube.com/watch?v={video_Id}aKCNrkERJ3E"))
+        self.webview.load(QUrl(f"https://www.yout-ube.com/watch?v={video_Id}"))
 
     def removePlayer(self):
         widget = self.sender().parent()
@@ -126,7 +114,7 @@ class YoutubeWindow(QWidget):
 
         buttonAddPlayer = QPushButton('&Add player', clicked=self.addplayer)
         self.layout.addWidget(buttonAddPlayer)
-
+        buttonAddAccount = QPushButton('&Add Youtube account', clicked=self.addplayer)
         self.video = QGridLayout()
         self.layout.addLayout(self.video)
 
@@ -145,8 +133,6 @@ class YoutubeWindow(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    interceptor = WebEngineUrlRequestInterceptor()
-    QtWebEngineWidgets.QWebEngineProfile.defaultProfile().setRequestInterceptor(interceptor)
     window = YoutubeWindow()
     window.show()
 
