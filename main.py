@@ -9,7 +9,7 @@ from adblockparser import AdblockRules
 __version__ = 'v1.1'
 __author__ = 'Sam.exe'
 
-with open("easylist.txt") as f:
+with open("easylist.txt", "r",  encoding='utf8') as f:
     raw_rules = f.readlines()
     rules = AdblockRules(raw_rules)
 
