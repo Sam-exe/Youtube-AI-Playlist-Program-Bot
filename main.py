@@ -61,7 +61,7 @@ class YoutubePlayer(QWidget):
     
     def updateVideo(self, ):
         video_Id = self.input.text()
-        self.webview.load(QUrl(f"https://www.yout-ube.com./watch?v={video_Id}"))
+        self.webview.load(QUrl(f"https://www.youtube.com./watch?v={video_Id}"))
 
     def removePlayer(self):
         widget = self.sender().parent()
