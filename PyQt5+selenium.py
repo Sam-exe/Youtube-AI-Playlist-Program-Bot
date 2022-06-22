@@ -30,7 +30,7 @@ class SeleniumManager(QtCore.QObject):
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         options.add_argument('--disable-blink-features=AutomationControlled')
-        #options.add_argument("--headless")
+        options.add_argument('headless')
         options.add_argument("window-size=555,555")    
         driver = webdriver.Chrome(options=options)
         stealth(driver,
@@ -41,10 +41,16 @@ class SeleniumManager(QtCore.QObject):
             renderer="Intel Iris OpenGL Engine",
             fix_hairline=True,
             )
-        
-        driver.get("https://youtube.com")
-        driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")).click()
+        list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=sO65YihyZac']
+        driver.get(list[0])
+        try:
+            if driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")):
+                driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")).click()
+        except NoSuchElementException:
+            None
+
         wait = ui.WebDriverWait(driver, 300)
+        
         while True:
             try:
                 if EC.presence_of_element_located((By.XPATH, ".//div/div/div/div/div/span/button/div[contains(text(),'skip AD')]")):  
@@ -57,7 +63,7 @@ class SeleniumManager(QtCore.QObject):
                 time.sleep(2)
             try:
                 if driver.find_element_by_css_selector(".ytp-chrome-controls button[title=Replay]"):
-                    driver.get("https://youtube.com/test")
+                    driver.get(list[1])
 
                     print("working")
             except NoSuchElementException:
@@ -72,11 +78,11 @@ class PushButton(QWidget):
         self.setWindowTitle("PushButton")
         self.setGeometry(400,400,300,260)
         self.closeButton = QPushButton(self)
-        self.closeButton.setText("Close")          #text
+        self.closeButton.setText("Open youtube player")          #text
         self.closeButton.setIcon(QIcon("close.png")) #icon
-        self.closeButton.setShortcut('Ctrl+D')  #shortcut key
-        self.closeButton.setToolTip("Close the widget") #Tool tip
-        self.closeButton.move(100,100)
+        self.closeButton.setShortcut('Ctrl+O')  #shortcut key
+        self.closeButton.setToolTip("Open Youtube player") #Tool tip
+        self.closeButton.move(100,0)
 
         self._manager = SeleniumManager()
         self.closeButton.clicked.connect(self._manager.start)
