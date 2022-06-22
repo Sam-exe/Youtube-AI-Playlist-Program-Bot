@@ -41,10 +41,15 @@ class SeleniumManager(QtCore.QObject):
             fix_hairline=True,
             )
         driver.get('https://www.google.com')
+        while True:
+            continue
     def _execute(self):
         options = webdriver.ChromeOptions()
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
         options.add_argument("--window-size=500,500")
+        options.add_argument("--headless")
+        options.add_argument('--disable-gpu')
+        options.add_argument("--remote-debugging-port=9222")
         options.add_argument("--app=http://www.google.com")
         options.add_argument('--mute-audio')
         driver = webdriver.Chrome(options=options)
@@ -81,7 +86,7 @@ class SeleniumManager(QtCore.QObject):
                     driver.get_screenshot_as_file('test1.png')
                     continue
             except NoSuchElementException:
-                time.sleep(2)
+                continue
             try:
                 if driver.find_element(by=By.CSS_SELECTOR, value=".ytp-chrome-controls button[title=Replay]"):
                     if Start >= len(list):
@@ -92,7 +97,7 @@ class SeleniumManager(QtCore.QObject):
                         self.layout.addWidget(QLabel('Done'))
                     print("working")
             except NoSuchElementException:
-                time.sleep(2)
+                continue
         
 class PushButton(QWidget):
     def __init__(self):
