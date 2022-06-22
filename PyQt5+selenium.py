@@ -56,7 +56,9 @@ class SeleniumManager(QtCore.QObject):
             except NoSuchElementException:
                 time.sleep(2)
             try:
-                if EC.presence_of_element_located((By.XPATH, "//div[@class='ytp-autonav-endscreen-upnext-header']")):
+                if driver.find_element_by_css_selector(".ytp-chrome-controls button[title=Replay]"):
+                    driver.get("https://youtube.com/test")
+
                     print("working")
             except NoSuchElementException:
                 time.sleep(2)
