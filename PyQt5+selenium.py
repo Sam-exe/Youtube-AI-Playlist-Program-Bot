@@ -21,21 +21,31 @@ class SeleniumManager(QtCore.QObject):
 
     def start(self):
         threading.Thread(target=self._execute, daemon=True).start()
-
+    def start_setting(self):
+        threading.Thread(target=self.GoogleSettings, daemon=True).start()
+    def GoogleSettings(self):
+        options = webdriver.ChromeOptions()
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
+        options.add_argument("--window-size=500,500")
+        options.add_argument("--app=http://www.google.com")
+        options.add_argument('--mute-audio')
+        driver = webdriver.Chrome(options=options)
+        ui.WebDriverWait(driver, 300)
+        stealth(driver,
+            languages=["en-US", "en"],
+            user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36',
+            vendor="Google Inc.",
+            platform="Win32",
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            fix_hairline=True,
+            )
+        driver.get('https://www.google.com')
     def _execute(self):
         options = webdriver.ChromeOptions()
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
-        #options = webdriver.ChromeOptions()
-        #options.headless = True        options.add_argument(f'user-agent={user_agent}')
         options.add_argument("--window-size=500,500")
-        #options.add_argument('--allow-running-insecure-content')
-        #options.add_argument("--start-maximized")
         options.add_argument("--app=http://www.google.com")
-        #options.add_argument("--headless")
-        #options.add_argument('window-size=20x20')
-        #options.add_argument("disable-infobars")
-        #options.headless = True
-        #options.add_argument('--incognito')
         options.add_argument('--mute-audio')
         driver = webdriver.Chrome(options=options)
         stealth(driver,
@@ -96,7 +106,7 @@ class PushButton(QWidget):
         widget = self.geometry()
         print(screen.width())
         xas = screen.width()
-        x = xas // round(5)
+        x = 500
         y = screen.height() - screen.height()
         self.move(x, y)
         self.closeButton = QPushButton(self)
@@ -109,6 +119,7 @@ class PushButton(QWidget):
         self.OpenSettingsButton.setText('Open youtube login')
         self._manager = SeleniumManager()
         self.closeButton.clicked.connect(self._manager.start)
+        self.OpenSettingsButton.clicked.connect(self._manager.start_setting)
     def test():
         print("test")
 if __name__ == '__main__':
