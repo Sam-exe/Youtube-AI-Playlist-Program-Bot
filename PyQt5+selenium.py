@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDesktopWidget, QVBoxLayout, QLabel
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -9,14 +9,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 import threading
 import sys
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
 from selenium_stealth import stealth
-from pyvirtualdisplay import Display
 import time
 
 
@@ -31,17 +26,17 @@ class SeleniumManager(QtCore.QObject):
         options = webdriver.ChromeOptions()
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
         #options = webdriver.ChromeOptions()
-        #options.headless = True
-        options.add_experimental_option("excludeSwitches",["ignore-certificate-errors"])
-        options.add_argument(f'user-agent={user_agent}')
-        #options.add_argument("--window-size=1920,1080")
-        options.add_argument('--allow-running-insecure-content')
-        options.add_argument("--start-maximized")
+        #options.headless = True        options.add_argument(f'user-agent={user_agent}')
+        options.add_argument("--window-size=500,500")
+        #options.add_argument('--allow-running-insecure-content')
+        #options.add_argument("--start-maximized")
+        options.add_argument("--app=http://www.google.com")
         #options.add_argument("--headless")
-        #options.add_argument('window-size=1920x1080')
-        options.headless = True
+        #options.add_argument('window-size=20x20')
+        #options.add_argument("disable-infobars")
+        #options.headless = True
         #options.add_argument('--incognito')
-        #options.add_argument('--mute-audio')
+        options.add_argument('--mute-audio')
         driver = webdriver.Chrome(options=options)
         stealth(driver,
             languages=["en-US", "en"],
@@ -52,18 +47,20 @@ class SeleniumManager(QtCore.QObject):
             renderer="Intel Iris OpenGL Engine",
             fix_hairline=True,
             )
-        list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=XpH3O6mnZvw']
-        driver.get(list[0])
+        list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=0_CDMstFg7M','https://www.youtube.com/watch?v=0_CDMstFg7Mhttps://www.youtube.com/watch?v=0_CDMstFg7M']
+        Start = 0
+        driver.get(list[Start])
         driver.get_screenshot_as_file('test.png')
-        try:
-            if driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")):
-                driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")).click()
-        except NoSuchElementException:
-            None
+        
 
         wait = ui.WebDriverWait(driver, 300)
         
         while True:
+            try:
+                if driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")):
+                    driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")).click()
+            except NoSuchElementException:
+                None
             try:
                 if EC.presence_of_element_located((By.XPATH, ".//div/div/div/div/div/span/button/div[contains(text(),'skip AD')]")):  
                     button = driver.find_element(by=By.XPATH, value=".//div/div/div/div/div/span/button/div[contains(text(),'Skip Ad')]")
@@ -77,8 +74,12 @@ class SeleniumManager(QtCore.QObject):
                 time.sleep(2)
             try:
                 if driver.find_element(by=By.CSS_SELECTOR, value=".ytp-chrome-controls button[title=Replay]"):
-                    driver.get(list[1])
-
+                    if Start >= len(list):
+                        Start += 1
+                        driver.get(list[Start])
+                    else:
+                        self.layout =  QVBoxLayout()
+                        self.layout.addWidget(QLabel('Done'))
                     print("working")
             except NoSuchElementException:
                 time.sleep(2)
@@ -91,6 +92,11 @@ class PushButton(QWidget):
     def initUI(self):
         self.setWindowTitle("PushButton")
         self.setGeometry(400,400,300,260)
+        screen = QDesktopWidget().screenGeometry()
+        widget = self.geometry()
+        x = screen.width() - widget.width()
+        y = screen.height() - widget.height()
+        self.move(x, y)
         self.closeButton = QPushButton(self)
         self.closeButton.setText("Open youtube player")          #text
         self.closeButton.setIcon(QIcon("close.png")) #icon
