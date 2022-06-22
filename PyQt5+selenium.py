@@ -51,13 +51,15 @@ class SeleniumManager(QtCore.QObject):
                     button = driver.find_element(by=By.XPATH, value=".//div/div/div/div/div/span/button/div[contains(text(),'Skip Ad')]")
                     driver.execute_script("arguments[0].click();", button)
                     print("ad skipped")
-                if EC.element_to_be_clickable(By.XPATH, consent_button_xpath):
-                    print('working!')
                 else:
                     continue
             except NoSuchElementException:
                 time.sleep(2)
-                
+            try:
+                if EC.presence_of_element_located((By.XPATH, "//div[@class='ytp-autonav-endscreen-upnext-header']")):
+                    print("working")
+            except NoSuchElementException:
+                time.sleep(2)
         
 class PushButton(QWidget):
     def __init__(self):
