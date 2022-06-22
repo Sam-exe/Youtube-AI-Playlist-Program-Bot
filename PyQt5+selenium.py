@@ -30,19 +30,18 @@ class SeleniumManager(QtCore.QObject):
     def _execute(self):
         options = webdriver.ChromeOptions()
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
-        options = webdriver.ChromeOptions()
-        options.headless = True
+        #options = webdriver.ChromeOptions()
+        #options.headless = True
+        options.add_experimental_option("excludeSwitches",["ignore-certificate-errors"])
         options.add_argument(f'user-agent={user_agent}')
-        options.add_argument("--window-size=1920,1080")
+        #options.add_argument("--window-size=1920,1080")
         options.add_argument('--allow-running-insecure-content')
         options.add_argument("--start-maximized")
-        options.add_argument('window-size=1920x1080')
-        options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option('useAutomationExtension', False)
-        options.add_argument('--disable-blink-features=AutomationControlled')
+        #options.add_argument("--headless")
+        #options.add_argument('window-size=1920x1080')
         options.headless = True
-        options.add_argument("window-size=555,555")    
+        #options.add_argument('--incognito')
+        #options.add_argument('--mute-audio')
         driver = webdriver.Chrome(options=options)
         stealth(driver,
             languages=["en-US", "en"],
@@ -53,7 +52,7 @@ class SeleniumManager(QtCore.QObject):
             renderer="Intel Iris OpenGL Engine",
             fix_hairline=True,
             )
-        list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=sO65YihyZac']
+        list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=XpH3O6mnZvw']
         driver.get(list[0])
         driver.get_screenshot_as_file('test.png')
         try:
