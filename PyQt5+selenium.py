@@ -94,8 +94,10 @@ class PushButton(QWidget):
         self.setGeometry(400,400,300,260)
         screen = QDesktopWidget().screenGeometry()
         widget = self.geometry()
-        x = screen.width() - widget.width()
-        y = screen.height() - widget.height()
+        print(screen.width())
+        xas = screen.width()
+        x = xas // round(5)
+        y = screen.height() - screen.height()
         self.move(x, y)
         self.closeButton = QPushButton(self)
         self.closeButton.setText("Open youtube player")          #text
@@ -103,7 +105,8 @@ class PushButton(QWidget):
         self.closeButton.setShortcut('Ctrl+O')  #shortcut key
         self.closeButton.setToolTip("Open Youtube player") #Tool tip
         self.closeButton.move(100,0)
-
+        self.OpenSettingsButton = QPushButton(self)
+        self.OpenSettingsButton.setText('Open youtube login')
         self._manager = SeleniumManager()
         self.closeButton.clicked.connect(self._manager.start)
     def test():
