@@ -16,7 +16,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium_stealth import stealth
+from pyvirtualdisplay import Display
 import time
+
+
 class SeleniumManager(QtCore.QObject):
     started = QtCore.pyqtSignal()
     finished = QtCore.pyqtSignal()
@@ -26,15 +29,24 @@ class SeleniumManager(QtCore.QObject):
 
     def _execute(self):
         options = webdriver.ChromeOptions()
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
+        options = webdriver.ChromeOptions()
+        options.headless = True
+        options.add_argument(f'user-agent={user_agent}')
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument('--allow-running-insecure-content')
+        options.add_argument("--start-maximized")
+        options.add_argument('window-size=1920x1080')
         options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         options.add_argument('--disable-blink-features=AutomationControlled')
-        options.add_argument('headless')
+        options.headless = True
         options.add_argument("window-size=555,555")    
         driver = webdriver.Chrome(options=options)
         stealth(driver,
             languages=["en-US", "en"],
+            user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36',
             vendor="Google Inc.",
             platform="Win32",
             webgl_vendor="Intel Inc.",
@@ -43,6 +55,7 @@ class SeleniumManager(QtCore.QObject):
             )
         list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=sO65YihyZac']
         driver.get(list[0])
+        driver.get_screenshot_as_file('test.png')
         try:
             if driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")):
                 driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")).click()
@@ -56,13 +69,15 @@ class SeleniumManager(QtCore.QObject):
                 if EC.presence_of_element_located((By.XPATH, ".//div/div/div/div/div/span/button/div[contains(text(),'skip AD')]")):  
                     button = driver.find_element(by=By.XPATH, value=".//div/div/div/div/div/span/button/div[contains(text(),'Skip Ad')]")
                     driver.execute_script("arguments[0].click();", button)
+                    driver.get_screenshot_as_file('test1.png')
                     print("ad skipped")
                 else:
+                    driver.get_screenshot_as_file('test1.png')
                     continue
             except NoSuchElementException:
                 time.sleep(2)
             try:
-                if driver.find_element_by_css_selector(".ytp-chrome-controls button[title=Replay]"):
+                if driver.find_element(by=By.CSS_SELECTOR, value=".ytp-chrome-controls button[title=Replay]"):
                     driver.get(list[1])
 
                     print("working")
