@@ -63,7 +63,7 @@ class SeleniumManager(QtCore.QObject):
             renderer="Intel Iris OpenGL Engine",
             fix_hairline=True,
             )
-        Youtube_list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=0_CDMstFg7M']
+        Youtube_list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=0_CDMstFg7M','https://www.youtube.com/watch?v=0_CDMstFg7M']
         Start = 0
         driver.get(Youtube_list[Start])
         driver.get_screenshot_as_file('test.png')
@@ -96,12 +96,13 @@ class SeleniumManager(QtCore.QObject):
                     #driver.get('https://www.youtube.com/watch?v=0_CDMstFg7M')
                     if Start <= len(Youtube_list):
                         print('replay found2')
+                        Start += 1
                         
-                        
-                        if len(Youtube_list) == Start:
+                        if len(Youtube_list) <= Start:
                             print('stopped')
+                            driver.close()
+                            
                         else:
-                            Start += 1
                             driver.get(Youtube_list[Start])
                     
             except NoSuchElementException:
