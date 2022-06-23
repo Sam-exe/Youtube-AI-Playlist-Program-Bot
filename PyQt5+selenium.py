@@ -138,7 +138,7 @@ class PushButton(QWidget):
         self.closeButton.clicked.connect(self._manager.start)
         self.OpenSettingsButton.clicked.connect(self._manager.start_setting)
 
-
+        
 
         self.layout = QVBoxLayout(self)
         self.label = QLabel("My text")
