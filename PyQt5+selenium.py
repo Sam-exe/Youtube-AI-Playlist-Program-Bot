@@ -104,7 +104,7 @@ class SeleniumManager(QtCore.QObject):
                             
                         else:
                             driver.get(Youtube_list[Start])
-                    
+                            
             except NoSuchElementException:
                 time.sleep(2)
                 print('nonefound')
@@ -116,7 +116,7 @@ class PushButton(QWidget):
 
     def initUI(self):
         self.setWindowTitle("PushButton")
-        self.setGeometry(400,400,300,260)
+        self.setGeometry(600,600,600,300)
         screen = QDesktopWidget().screenGeometry()
         widget = self.geometry()
         print(screen.width())
@@ -129,12 +129,23 @@ class PushButton(QWidget):
         self.closeButton.setIcon(QIcon("close.png")) #icon
         self.closeButton.setShortcut('Ctrl+O')  #shortcut key
         self.closeButton.setToolTip("Open Youtube player") #Tool tip
-        self.closeButton.move(100,0)
+        self.closeButton.move(200,20)
+        self.closeButton.setGeometry(200, 150, 100, 40)
         self.OpenSettingsButton = QPushButton(self)
         self.OpenSettingsButton.setText('Open youtube login')
+        self.OpenSettingsButton.move(50,20)
         self._manager = SeleniumManager()
         self.closeButton.clicked.connect(self._manager.start)
         self.OpenSettingsButton.clicked.connect(self._manager.start_setting)
+
+
+
+        self.layout = QVBoxLayout(self)
+        self.label = QLabel("My text")
+
+        self.layout.addWidget(self.label)
+        self.setWindowTitle("My Own Title")
+        self.setLayout(self.layout)
     def test():
         print("test")
 if __name__ == '__main__':
