@@ -1,3 +1,4 @@
+from turtle import done
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDesktopWidget, QVBoxLayout, QLabel
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
@@ -47,11 +48,11 @@ class SeleniumManager(QtCore.QObject):
         options = webdriver.ChromeOptions()
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
         options.add_argument("--window-size=500,500")
-        options.add_argument("--headless")
-        options.add_argument('--disable-gpu')
-        options.add_argument("--remote-debugging-port=9222")
-        options.add_argument("--app=http://www.google.com")
-        options.add_argument('--mute-audio')
+        #options.add_argument("--headless")
+        #options.add_argument('--disable-gpu')
+        #options.add_argument("--remote-debugging-port=9222")
+        #options.add_argument("--app=http://www.google.com")
+        #options.add_argument('--mute-audio')
         driver = webdriver.Chrome(options=options)
         stealth(driver,
             languages=["en-US", "en"],
@@ -62,9 +63,9 @@ class SeleniumManager(QtCore.QObject):
             renderer="Intel Iris OpenGL Engine",
             fix_hairline=True,
             )
-        list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=0_CDMstFg7M','https://www.youtube.com/watch?v=0_CDMstFg7Mhttps://www.youtube.com/watch?v=0_CDMstFg7M']
+        Youtube_list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=0_CDMstFg7M']
         Start = 0
-        driver.get(list[Start])
+        driver.get(Youtube_list[Start])
         driver.get_screenshot_as_file('test.png')
         
 
@@ -75,7 +76,7 @@ class SeleniumManager(QtCore.QObject):
                 if driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")):
                     driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")).click()
             except NoSuchElementException:
-                None
+                time.sleep(2)
             try:
                 if EC.presence_of_element_located((By.XPATH, ".//div/div/div/div/div/span/button/div[contains(text(),'skip AD')]")):  
                     button = driver.find_element(by=By.XPATH, value=".//div/div/div/div/div/span/button/div[contains(text(),'Skip Ad')]")
@@ -84,20 +85,28 @@ class SeleniumManager(QtCore.QObject):
                     print("ad skipped")
                 else:
                     driver.get_screenshot_as_file('test1.png')
-                    continue
+                    print('nonefound')
             except NoSuchElementException:
-                continue
+                time.sleep(2)
+                print('nonefound')
             try:
                 if driver.find_element(by=By.CSS_SELECTOR, value=".ytp-chrome-controls button[title=Replay]"):
-                    if Start >= len(list):
-                        Start += 1
-                        driver.get(list[Start])
-                    else:
-                        self.layout =  QVBoxLayout()
-                        self.layout.addWidget(QLabel('Done'))
-                    print("working")
+                    #driver.get('https://www.youtube.com/watch?v=0_CDMstFg7M')
+                    print('replay found1')
+                    #driver.get('https://www.youtube.com/watch?v=0_CDMstFg7M')
+                    if Start <= len(Youtube_list):
+                        print('replay found2')
+                        
+                        
+                        if len(Youtube_list) == Start:
+                            print('stopped')
+                        else:
+                            Start += 1
+                            driver.get(Youtube_list[Start])
+                    
             except NoSuchElementException:
-                continue
+                time.sleep(2)
+                print('nonefound')
         
 class PushButton(QWidget):
     def __init__(self):
