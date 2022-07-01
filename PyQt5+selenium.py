@@ -17,9 +17,7 @@ import time
 import pickle
 
 
-
-class PushButton(QWidget):
-
+class SeleniumManager(QtCore.QObject):
     started = QtCore.pyqtSignal()
     finished = QtCore.pyqtSignal()
 
@@ -130,6 +128,7 @@ class PushButton(QWidget):
                 time.sleep(2)
                 print('nonefound')
             PushButton().initUI()
+class PushButton(QWidget):
     def __init__(self):
         super(PushButton,self).__init__()
         self.initUI()
@@ -168,7 +167,7 @@ class PushButton(QWidget):
         self.OpenSettingsButton = QPushButton(self)
         self.OpenSettingsButton.setText('Open youtube login')
         self.OpenSettingsButton.move(50,20)
-        #self._manager = SeleniumManager()
+        self._manager = SeleniumManager()
         self.closeButton.clicked.connect(self._manager.start)
         self.OpenSettingsButton.clicked.connect(self._manager.start_setting)
 
@@ -182,7 +181,7 @@ class PushButton(QWidget):
         #self.setLayout(self.layout)
     def Label(self):
         LabelsVid = QLabel('test')
-        self.test.setText('test1111')
+        self.test.setTe
     def test():
         print("test")
 if __name__ == '__main__':
