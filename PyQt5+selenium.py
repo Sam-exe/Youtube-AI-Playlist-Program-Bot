@@ -1,4 +1,5 @@
-from turtle import done
+from turtle import done, st
+#from typing_extensions import Self
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDesktopWidget, QVBoxLayout, QLabel
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
@@ -91,9 +92,12 @@ class SeleniumManager(QtCore.QObject):
                     
                     driver.find_element(by=By.XPATH, value=("//ytd-button-renderer[2]//a[1]//tp-yt-paper-button[1]")).click()
                     print('cookie found')
+                    
+                    
                     #
             except NoSuchElementException:
                 print('cookie not found')
+                
                 time.sleep(2)
             try:
                 if EC.presence_of_element_located((By.XPATH, ".//div/div/div/div/div/span/button/div[contains(text(),'skip AD')]")):  
@@ -112,6 +116,7 @@ class SeleniumManager(QtCore.QObject):
                     #driver.get('https://www.youtube.com/watch?v=0_CDMstFg7M')
                     if Start <= len(Youtube_list):
                         print('replay found2')
+                        self.start = Start
                         Start += 1
                         
                         if len(Youtube_list) <= Start:
@@ -119,15 +124,21 @@ class SeleniumManager(QtCore.QObject):
                             driver.close()
                             pickle.dump( driver.get_cookies() , open("cookies.pkl","wb"))
                             self.close
-
                         else:
                             driver.get(Youtube_list[Start])
-                            
+            
                             
             except NoSuchElementException:
                 time.sleep(2)
                 print('nonefound')
-            PushButton().initUI()
+            print(Start)
+            return Start   
+            #PushButton().initUI()
+    def Number(self):
+        while True:
+            
+            print(self.start)
+        return self.start
 class PushButton(QWidget):
     def __init__(self):
         super(PushButton,self).__init__()
@@ -152,7 +163,7 @@ class PushButton(QWidget):
         
         self.test = QLabel(self)
         self.test.setText('test')
-        self.test.move(20, 20)
+        self.test.move(20, 50)
         
         windowExample = QtWidgets.QWidget()
         labelA = QtWidgets.QLabel(windowExample)
@@ -181,7 +192,10 @@ class PushButton(QWidget):
         #self.setLayout(self.layout)
     def Label(self):
         LabelsVid = QLabel('test')
-        self.test.setTe
+        self._manager = SeleniumManager()
+
+        while True:
+            self.test.setText(str(self._manager._execute()))
     def test():
         print("test")
 if __name__ == '__main__':
