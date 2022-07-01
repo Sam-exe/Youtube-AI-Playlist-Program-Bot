@@ -17,7 +17,9 @@ import time
 import pickle
 
 
-class SeleniumManager(QtCore.QObject):
+
+class PushButton(QWidget):
+
     started = QtCore.pyqtSignal()
     finished = QtCore.pyqtSignal()
 
@@ -128,7 +130,6 @@ class SeleniumManager(QtCore.QObject):
                 time.sleep(2)
                 print('nonefound')
             PushButton().initUI()
-class PushButton(QWidget):
     def __init__(self):
         super(PushButton,self).__init__()
         self.initUI()
@@ -136,7 +137,7 @@ class PushButton(QWidget):
     def initUI(self):
         self.layout =  QVBoxLayout()
         self.setLayout(self.layout)
-        buttonAddPlayer = QPushButton('&Add player')
+        buttonAddPlayer = QPushButton('&Add player', clicked=self.Label)
         self.layout.addWidget(buttonAddPlayer)
         self.setWindowTitle("PushButton")
         self.setGeometry(600,600,600,300)
@@ -150,7 +151,13 @@ class PushButton(QWidget):
         y = screen.height() - screen.height()
         self.move(x, y)
         
+        self.test = QLabel(self)
+        self.test.setText('test')
+        self.test.move(20, 20)
         
+        windowExample = QtWidgets.QWidget()
+        labelA = QtWidgets.QLabel(windowExample)
+        labelA.setText('Label Example')
         self.closeButton = QPushButton(self)
         self.closeButton.setText("Open youtube player")          #text
         self.closeButton.setIcon(QIcon("close.png")) #icon
@@ -161,7 +168,7 @@ class PushButton(QWidget):
         self.OpenSettingsButton = QPushButton(self)
         self.OpenSettingsButton.setText('Open youtube login')
         self.OpenSettingsButton.move(50,20)
-        self._manager = SeleniumManager()
+        #self._manager = SeleniumManager()
         self.closeButton.clicked.connect(self._manager.start)
         self.OpenSettingsButton.clicked.connect(self._manager.start_setting)
 
@@ -175,7 +182,7 @@ class PushButton(QWidget):
         #self.setLayout(self.layout)
     def Label(self):
         LabelsVid = QLabel('test')
-        self.layout.addWidget(QLabel('TESST'))
+        self.test.setText('test1111')
     def test():
         print("test")
 if __name__ == '__main__':
