@@ -14,6 +14,7 @@ import threading
 import sys
 from selenium_stealth import stealth
 import time
+import pickle
 
 
 class SeleniumManager(QtCore.QObject):
@@ -23,6 +24,7 @@ class SeleniumManager(QtCore.QObject):
     def start(self):
         threading.Thread(target=self._execute, daemon=True).start()
     def start_setting(self):
+        PushButton().Label()
         threading.Thread(target=self.GoogleSettings, daemon=True).start()
     def GoogleSettings(self):
         options = webdriver.ChromeOptions()
@@ -30,8 +32,16 @@ class SeleniumManager(QtCore.QObject):
         options.add_argument("--window-size=500,500")
         options.add_argument("--app=http://www.google.com")
         options.add_argument('--mute-audio')
+        
+
+        #cookies = pickle.load(open("cookies.pkl", "rb"))
+        #for cookie in cookies:
+        #    driver.add_cookie(cookie)
         driver = webdriver.Chrome(options=options)
-        ui.WebDriverWait(driver, 300)
+        #cookies = pickle.load(open("cookies.pkl", "rb"))
+        #for cookie in cookies:
+        #    driver.add_cookie(cookie)
+        #ui.WebDriverWait(driver, 300)
         stealth(driver,
             languages=["en-US", "en"],
             user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36',
@@ -43,6 +53,7 @@ class SeleniumManager(QtCore.QObject):
             )
         driver.get('https://www.google.com')
         while True:
+            pickle.dump(driver.get_cookies() , open("cookies.pkl","wb"))
             continue
     def _execute(self):
         options = webdriver.ChromeOptions()
@@ -53,6 +64,9 @@ class SeleniumManager(QtCore.QObject):
         #options.add_argument("--remote-debugging-port=9222")
         #options.add_argument("--app=http://www.google.com")
         #options.add_argument('--mute-audio')
+        #cookies = pickle.load(open("cookies.pkl", "rb"))
+        #for cookie in cookies:
+        #    driver.add_cookie(cookie)
         driver = webdriver.Chrome(options=options)
         stealth(driver,
             languages=["en-US", "en"],
@@ -73,22 +87,24 @@ class SeleniumManager(QtCore.QObject):
         
         while True:
             try:
-                if driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")):
-                    driver.find_element(by=By.XPATH, value=("./html[1]/body[1]/ytd-app[1]/ytd-consent-bump-v2-lightbox[1]/tp-yt-paper-dialog[1]/div[4]/div[1]/div[6]/div[1]/ytd-button-renderer[2]/a[1]/tp-yt-paper-button[1]")).click()
+                if driver.find_element(by=By.XPATH, value=("//ytd-button-renderer[2]//a[1]//tp-yt-paper-button[1]")):
+                    
+                    driver.find_element(by=By.XPATH, value=("//ytd-button-renderer[2]//a[1]//tp-yt-paper-button[1]")).click()
+                    print('cookie found')
+                    #
             except NoSuchElementException:
+                print('cookie not found')
                 time.sleep(2)
             try:
                 if EC.presence_of_element_located((By.XPATH, ".//div/div/div/div/div/span/button/div[contains(text(),'skip AD')]")):  
                     button = driver.find_element(by=By.XPATH, value=".//div/div/div/div/div/span/button/div[contains(text(),'Skip Ad')]")
                     driver.execute_script("arguments[0].click();", button)
-                    driver.get_screenshot_as_file('test1.png')
                     print("ad skipped")
                 else:
-                    driver.get_screenshot_as_file('test1.png')
-                    print('nonefound')
+                    print('not found')
             except NoSuchElementException:
                 time.sleep(2)
-                print('nonefound')
+                print('none found')
             try:
                 if driver.find_element(by=By.CSS_SELECTOR, value=".ytp-chrome-controls button[title=Replay]"):
                     #driver.get('https://www.youtube.com/watch?v=0_CDMstFg7M')
@@ -101,22 +117,31 @@ class SeleniumManager(QtCore.QObject):
                         if len(Youtube_list) <= Start:
                             print('stopped')
                             driver.close()
-                            
+                            pickle.dump( driver.get_cookies() , open("cookies.pkl","wb"))
+                            self.close
+
                         else:
                             driver.get(Youtube_list[Start])
+                            
                             
             except NoSuchElementException:
                 time.sleep(2)
                 print('nonefound')
-        
+            PushButton().initUI()
 class PushButton(QWidget):
     def __init__(self):
         super(PushButton,self).__init__()
         self.initUI()
 
     def initUI(self):
+        self.layout =  QVBoxLayout()
+        self.setLayout(self.layout)
+        buttonAddPlayer = QPushButton('&Add player')
+        self.layout.addWidget(buttonAddPlayer)
         self.setWindowTitle("PushButton")
         self.setGeometry(600,600,600,300)
+        #Label Video's:
+        
         screen = QDesktopWidget().screenGeometry()
         widget = self.geometry()
         print(screen.width())
@@ -124,6 +149,8 @@ class PushButton(QWidget):
         x = 500
         y = screen.height() - screen.height()
         self.move(x, y)
+        
+        
         self.closeButton = QPushButton(self)
         self.closeButton.setText("Open youtube player")          #text
         self.closeButton.setIcon(QIcon("close.png")) #icon
@@ -140,12 +167,15 @@ class PushButton(QWidget):
 
         
 
-        self.layout = QVBoxLayout(self)
-        self.label = QLabel("My text")
+        #self.layout = QVBoxLayout(self)
+        #self.label = QLabel("My text")
 
-        self.layout.addWidget(self.label)
-        self.setWindowTitle("My Own Title")
-        self.setLayout(self.layout)
+        #self.layout.addWidget(self.label)
+        #self.setWindowTitle("My Own Title")
+        #self.setLayout(self.layout)
+    def Label(self):
+        LabelsVid = QLabel('test')
+        self.layout.addWidget(QLabel('TESST'))
     def test():
         print("test")
 if __name__ == '__main__':
