@@ -1,4 +1,4 @@
-from turtle import done, st
+from turtle import done
 #from typing_extensions import Self
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDesktopWidget, QVBoxLayout, QLabel
 from PyQt5.QtGui import QIcon
@@ -18,14 +18,24 @@ import time
 import pickle
 
 
-class SeleniumManager(QtCore.QObject):
+
+    
+      
+
+    
+class test():
+    print('test wokr')
+    def test2(self):
+        return '1'
+class PushButton(QWidget):
+    
     started = QtCore.pyqtSignal()
     finished = QtCore.pyqtSignal()
 
     def start(self):
         threading.Thread(target=self._execute, daemon=True).start()
     def start_setting(self):
-        PushButton().Label()
+        #PushButton().Label()
         threading.Thread(target=self.GoogleSettings, daemon=True).start()
     def GoogleSettings(self):
         options = webdriver.ChromeOptions()
@@ -79,13 +89,13 @@ class SeleniumManager(QtCore.QObject):
             fix_hairline=True,
             )
         Youtube_list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=0_CDMstFg7M','https://www.youtube.com/watch?v=0_CDMstFg7M']
-        Start = 0
-        driver.get(Youtube_list[Start])
+        self.Start1 = 0
+        driver.get(Youtube_list[self.Start1])
         driver.get_screenshot_as_file('test.png')
-        
+        self.label()
 
         wait = ui.WebDriverWait(driver, 300)
-        
+        #self.hello = Start1
         while True:
             try:
                 if driver.find_element(by=By.XPATH, value=("//ytd-button-renderer[2]//a[1]//tp-yt-paper-button[1]")):
@@ -114,41 +124,37 @@ class SeleniumManager(QtCore.QObject):
                     #driver.get('https://www.youtube.com/watch?v=0_CDMstFg7M')
                     print('replay found1')
                     #driver.get('https://www.youtube.com/watch?v=0_CDMstFg7M')
-                    if Start <= len(Youtube_list):
+                    if self.Start1 <= len(Youtube_list):
                         print('replay found2')
-                        self.start = Start
-                        Start += 1
-                        
-                        if len(Youtube_list) <= Start:
+                        self.Start1 += 1
+                        if len(Youtube_list) <= self.Start1:
                             print('stopped')
                             driver.close()
-                            pickle.dump( driver.get_cookies() , open("cookies.pkl","wb"))
                             self.close
+                            
+
                         else:
-                            driver.get(Youtube_list[Start])
-            
+                            driver.get(Youtube_list[self.Start1])
+                            self.label('oaihsdoiasdoihasohdiaoishdoiahsd')
+                   
+                            
                             
             except NoSuchElementException:
                 time.sleep(2)
                 print('nonefound')
-            print(Start)
-            return Start   
-            #PushButton().initUI()
-    def Number(self):
-        while True:
-            
-            print(self.start)
-        return self.start
-class PushButton(QWidget):
+    #def Number(self):
+        #return .SeleniumManager._execute(Start1)
+
+    #Number('1')
     def __init__(self):
         super(PushButton,self).__init__()
         self.initUI()
-
+    
     def initUI(self):
         self.layout =  QVBoxLayout()
         self.setLayout(self.layout)
-        buttonAddPlayer = QPushButton('&Add player', clicked=self.Label)
-        self.layout.addWidget(buttonAddPlayer)
+        #buttonAddPlayer = QPushButton('&Add player', clicked=self.Label)
+        #self.layout.addWidget(buttonAddPlayer)
         self.setWindowTitle("PushButton")
         self.setGeometry(600,600,600,300)
         #Label Video's:
@@ -162,8 +168,8 @@ class PushButton(QWidget):
         self.move(x, y)
         
         self.test = QLabel(self)
-        self.test.setText('test')
-        self.test.move(20, 50)
+        self.test.setText('Waiting for videos')
+        self.test.move(300, 20)
         
         windowExample = QtWidgets.QWidget()
         labelA = QtWidgets.QLabel(windowExample)
@@ -178,10 +184,16 @@ class PushButton(QWidget):
         self.OpenSettingsButton = QPushButton(self)
         self.OpenSettingsButton.setText('Open youtube login')
         self.OpenSettingsButton.move(50,20)
-        self._manager = SeleniumManager()
-        self.closeButton.clicked.connect(self._manager.start)
-        self.OpenSettingsButton.clicked.connect(self._manager.start_setting)
-
+        #self._manager = SeleniumManager()
+        
+        self.closeButton.clicked.connect(self.start)
+        self.OpenSettingsButton.clicked.connect(self.start_setting)
+        
+    def label(self, o):
+            #LabelsVid = QLabel('test')
+            self.test.setText(o)
+            t = 1
+            print('done')
         
 
         #self.layout = QVBoxLayout(self)
@@ -190,16 +202,16 @@ class PushButton(QWidget):
         #self.layout.addWidget(self.label)
         #self.setWindowTitle("My Own Title")
         #self.setLayout(self.layout)
-    def Label(self):
-        LabelsVid = QLabel('test')
-        self._manager = SeleniumManager()
-
-        while True:
-            self.test.setText(str(self._manager._execute()))
-    def test():
-        print("test")
+       
+        
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = PushButton()
     ex.show()
+    
+    #object_a = SeleniumManager()
+    #SeleniumManager.Number(object_a)
     sys.exit(app.exec_()) 
+    
+    
