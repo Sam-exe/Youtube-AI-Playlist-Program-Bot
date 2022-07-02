@@ -1,7 +1,8 @@
 
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDesktopWidget, QVBoxLayout, QLabel
+from tkinter.ttk import Style
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDesktopWidget, QVBoxLayout, QLabel, QLineEdit
 from PyQt5.QtGui import QIcon, QFont
-
+import requests
 from PyQt5 import QtWidgets, QtGui, QtCore
 from selenium.common.exceptions import NoSuchElementException
 import selenium.webdriver.support.ui as ui
@@ -179,24 +180,65 @@ class PushButton(QWidget):
         self.OpenYoutube.setShortcut('Ctrl+O')  #shortcut key
         self.OpenYoutube.setToolTip("Open Youtube player") #Tool tip
         #self.OpenYoutube.move(200,20)
-        self.OpenYoutube.setFont(QFont('Arial font', 15))
+        self.OpenYoutube.setFont(QFont('Arial font', 12))
         self.OpenYoutube.setGeometry(50, 100, 200, 50)
+
+        #Youtube Setting Button
         self.OpenSettingsButton = QPushButton(self)
-        self.OpenSettingsButton.setFont(QFont('Arial', 15))
+        self.OpenSettingsButton.setFont(QFont('Arial', 12))
         self.OpenSettingsButton.setText('Open youtube login')
         self.OpenSettingsButton.setGeometry(50, 20, 200, 50)
-        #self._manager = SeleniumManager()
-        
         self.OpenYoutube.clicked.connect(self.start)
         self.OpenSettingsButton.clicked.connect(self.start_setting)
         
+        #5 Youtube QlineEditor Fields
+        self.textbox1 = QLineEdit(self)
+        self.textbox1.move(300, 85)
+        self.textbox1.resize(150,25)
+        self.textbox1.setPlaceholderText('Fill in your Youtube Url')
+        
+
+        self.textbox2 = QLineEdit(self)
+        self.textbox2.move(300, 105)
+        self.textbox2.resize(150,25)
+
+        self.textbox3 = QLineEdit(self)
+        self.textbox3.move(300, 125)
+        self.textbox3.resize(150,25)
+
+        self.textbox4 = QLineEdit(self)
+        self.textbox4.move(300, 145)
+        self.textbox4.resize(150,25)
+
+        self.textbox5 = QLineEdit(self)
+        self.textbox5.move(300, 165)
+        self.textbox5.resize(150,25)
+        textboxValue = self.textbox1.text()
+        CheckButton = QPushButton('OK', self)
+        CheckButton.clicked.connect(self.clickMethod)
+        CheckButton.resize(200,32)
+        CheckButton.move(300, 200)        
+
+    def clickMethod(self):
+        if self.textbox1.text().startswith('https://www.youtube.com/watch?v='):
+            if len(self.textbox1.text()) == 43:
+                self.youtubeid = self.textbox1.text()[-11:]
+                checking_url = "http://img.youtube.com/vi/" + self.youtubeid + "/mqdefault.jpg"
+                check_1 = requests.get(checking_url)
+                if check_1.status_code == 200:
+                    print('JESSS')
+            
+        #r = requests.get(self.textbox1.text()) # random video id
+        #print(r.text)
+        
+        print('Your name: ' + self.textbox1.text())
     def label(self, label):
             self.test.setText(label)
             print('done')
     def logs(self, logs):
             self.test.setText(logs)
             
-        
+      
 
         #self.layout = QVBoxLayout(self)
         #self.label = QLabel("My text")
