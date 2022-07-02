@@ -168,9 +168,11 @@ class PushButton(QWidget):
         self.test = QLabel(self)
         self.test.setText('Waiting for videos')
         self.test.move(300, 40)
-        self.test = QLabel(self)
-        self.test.move(300, 20)
-        
+        self.log = QLabel(self)
+        self.log.move(300, 20)
+        self.video = QLabel(self)
+        self.video.move(300, 250)
+        self.video.resize(200,25)
         windowExample = QtWidgets.QWidget()
         labelA = QtWidgets.QLabel(windowExample)
         labelA.setText('Label Example')
@@ -194,25 +196,25 @@ class PushButton(QWidget):
         #5 Youtube QlineEditor Fields
         self.textbox1 = QLineEdit(self)
         self.textbox1.move(300, 85)
-        self.textbox1.resize(150,25)
+        self.textbox1.resize(200,25)
         self.textbox1.setPlaceholderText('Fill in your Youtube Url')
         
 
         self.textbox2 = QLineEdit(self)
         self.textbox2.move(300, 105)
-        self.textbox2.resize(150,25)
+        self.textbox2.resize(200,25)
 
         self.textbox3 = QLineEdit(self)
         self.textbox3.move(300, 125)
-        self.textbox3.resize(150,25)
+        self.textbox3.resize(200,25)
 
         self.textbox4 = QLineEdit(self)
         self.textbox4.move(300, 145)
-        self.textbox4.resize(150,25)
+        self.textbox4.resize(200,25)
 
         self.textbox5 = QLineEdit(self)
         self.textbox5.move(300, 165)
-        self.textbox5.resize(150,25)
+        self.textbox5.resize(200,25)
         textboxValue = self.textbox1.text()
         CheckButton = QPushButton('OK', self)
         CheckButton.clicked.connect(self.clickMethod)
@@ -220,24 +222,48 @@ class PushButton(QWidget):
         CheckButton.move(300, 200)        
 
     def clickMethod(self):
-        if self.textbox1.text().startswith('https://www.youtube.com/watch?v='):
-            if len(self.textbox1.text()) == 43:
-                self.youtubeid = self.textbox1.text()[-11:]
-                checking_url = "http://img.youtube.com/vi/" + self.youtubeid + "/mqdefault.jpg"
-                check_1 = requests.get(checking_url)
-                if check_1.status_code == 200:
-                    print('JESSS')
-            
-        #r = requests.get(self.textbox1.text()) # random video id
-        #print(r.text)
-        
-        print('Your name: ' + self.textbox1.text())
+        all = [self.textbox1.text(), self.textbox2.text(), self.textbox3.text(), self.textbox4.text(), self.textbox5.text()]
+        all_filled = []
+        all_failed = []
+        all_correct = []
+        for x in all:
+            if len(x) > 0:
+                all_filled.append(x)
+        #print(all_filled)
+        for all in all_filled:
+            print(all_filled)
+            if all.startswith('https://www.youtube.com/watch?v='):
+                if len(all) == 43:
+                    self.youtubeid = all[-11:]
+                    checking_url = "http://img.youtube.com/vi/" + self.youtubeid + "/mqdefault.jpg"
+                    check_1 = requests.get(checking_url)
+                    if check_1.status_code == 200:
+                        print('JESSS')
+                        all_correct.append(all)
+                    else:
+                        all_failed.append(all)
+                        print('not working')
+                else:
+                    all_failed.append(all)
+            else:
+                all_failed.append(all)
+        total_done =  len(all_filled)
+        if len(all_filled) == len(all_correct):
+            self.videos('All videos are working and are correct')
+        if len(all_filled) > len(all_correct):
+            self.videos('Not all videos are correct, ' + str(len(all_failed)) + '/' + str(len(all_filled)) + ' are not working')
+        print(len(all_filled))
+        print(all)
+        print(len(all))
+        print(total_done)
+
     def label(self, label):
             self.test.setText(label)
             print('done')
     def logs(self, logs):
-            self.test.setText(logs)
-            
+            self.log.setText(logs)
+    def videos(self, video):
+            self.video.setText(video)
       
 
         #self.layout = QVBoxLayout(self)
