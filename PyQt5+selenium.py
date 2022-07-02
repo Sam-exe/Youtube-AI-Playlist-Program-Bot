@@ -1,15 +1,12 @@
-from turtle import done
-#from typing_extensions import Self
+
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDesktopWidget, QVBoxLayout, QLabel
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QFont
+
 from PyQt5 import QtWidgets, QtGui, QtCore
 from selenium.common.exceptions import NoSuchElementException
 import selenium.webdriver.support.ui as ui
-from multiprocessing.connection import wait
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 import threading
 import sys
@@ -145,10 +142,7 @@ class PushButton(QWidget):
             except NoSuchElementException:
                 time.sleep(2)
                 print('nonefound')
-    #def Number(self):
-        #return .SeleniumManager._execute(Start1)
 
-    #Number('1')
     def __init__(self):
         super(PushButton,self).__init__()
         self.initUI()
@@ -184,11 +178,13 @@ class PushButton(QWidget):
         self.OpenYoutube.setIcon(QIcon("close.png")) #icon
         self.OpenYoutube.setShortcut('Ctrl+O')  #shortcut key
         self.OpenYoutube.setToolTip("Open Youtube player") #Tool tip
-        self.OpenYoutube.move(200,20)
-        self.OpenYoutube.setGeometry(200, 150, 100, 40)
+        #self.OpenYoutube.move(200,20)
+        self.OpenYoutube.setFont(QFont('Arial font', 15))
+        self.OpenYoutube.setGeometry(50, 100, 200, 50)
         self.OpenSettingsButton = QPushButton(self)
+        self.OpenSettingsButton.setFont(QFont('Arial', 15))
         self.OpenSettingsButton.setText('Open youtube login')
-        self.OpenSettingsButton.move(50,20)
+        self.OpenSettingsButton.setGeometry(50, 20, 200, 50)
         #self._manager = SeleniumManager()
         
         self.OpenYoutube.clicked.connect(self.start)
