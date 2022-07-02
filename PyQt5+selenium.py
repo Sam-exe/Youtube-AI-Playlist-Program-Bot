@@ -92,7 +92,7 @@ class PushButton(QWidget):
         self.Start1 = 0
         driver.get(Youtube_list[self.Start1])
         driver.get_screenshot_as_file('test.png')
-        self.label()
+        self.label('Starting')
 
         wait = ui.WebDriverWait(driver, 300)
         #self.hello = Start1
@@ -102,32 +102,34 @@ class PushButton(QWidget):
                     
                     driver.find_element(by=By.XPATH, value=("//ytd-button-renderer[2]//a[1]//tp-yt-paper-button[1]")).click()
                     print('cookie found')
-                    
+                    self.logs('Cookie Found')
                     
                     #
             except NoSuchElementException:
                 print('cookie not found')
-                
+                #self.logs('No cookie screen found')
                 time.sleep(2)
             try:
                 if EC.presence_of_element_located((By.XPATH, ".//div/div/div/div/div/span/button/div[contains(text(),'skip AD')]")):  
                     button = driver.find_element(by=By.XPATH, value=".//div/div/div/div/div/span/button/div[contains(text(),'Skip Ad')]")
                     driver.execute_script("arguments[0].click();", button)
                     print("ad skipped")
+                    self.logs('Ad Skipped')
                 else:
+                    self.logs('No Ad')
                     print('not found')
             except NoSuchElementException:
                 time.sleep(2)
                 print('none found')
             try:
                 if driver.find_element(by=By.CSS_SELECTOR, value=".ytp-chrome-controls button[title=Replay]"):
-                    #driver.get('https://www.youtube.com/watch?v=0_CDMstFg7M')
+                    self.logs('Video Ended')
                     print('replay found1')
-                    #driver.get('https://www.youtube.com/watch?v=0_CDMstFg7M')
                     if self.Start1 <= len(Youtube_list):
                         print('replay found2')
                         self.Start1 += 1
                         if len(Youtube_list) <= self.Start1:
+                            self.logs('stopped')
                             print('stopped')
                             driver.close()
                             self.close
@@ -135,7 +137,8 @@ class PushButton(QWidget):
 
                         else:
                             driver.get(Youtube_list[self.Start1])
-                            self.label('oaihsdoiasdoihasohdiaoishdoiahsd')
+                            self.logs('Still Going')
+                            
                    
                             
                             
@@ -169,31 +172,34 @@ class PushButton(QWidget):
         
         self.test = QLabel(self)
         self.test.setText('Waiting for videos')
+        self.test.move(300, 40)
+        self.test = QLabel(self)
         self.test.move(300, 20)
         
         windowExample = QtWidgets.QWidget()
         labelA = QtWidgets.QLabel(windowExample)
         labelA.setText('Label Example')
-        self.closeButton = QPushButton(self)
-        self.closeButton.setText("Open youtube player")          #text
-        self.closeButton.setIcon(QIcon("close.png")) #icon
-        self.closeButton.setShortcut('Ctrl+O')  #shortcut key
-        self.closeButton.setToolTip("Open Youtube player") #Tool tip
-        self.closeButton.move(200,20)
-        self.closeButton.setGeometry(200, 150, 100, 40)
+        self.OpenYoutube = QPushButton(self)
+        self.OpenYoutube.setText("Open youtube player")          #text
+        self.OpenYoutube.setIcon(QIcon("close.png")) #icon
+        self.OpenYoutube.setShortcut('Ctrl+O')  #shortcut key
+        self.OpenYoutube.setToolTip("Open Youtube player") #Tool tip
+        self.OpenYoutube.move(200,20)
+        self.OpenYoutube.setGeometry(200, 150, 100, 40)
         self.OpenSettingsButton = QPushButton(self)
         self.OpenSettingsButton.setText('Open youtube login')
         self.OpenSettingsButton.move(50,20)
         #self._manager = SeleniumManager()
         
-        self.closeButton.clicked.connect(self.start)
+        self.OpenYoutube.clicked.connect(self.start)
         self.OpenSettingsButton.clicked.connect(self.start_setting)
         
-    def label(self, o):
-            #LabelsVid = QLabel('test')
-            self.test.setText(o)
-            t = 1
+    def label(self, label):
+            self.test.setText(label)
             print('done')
+    def logs(self, logs):
+            self.test.setText(logs)
+            
         
 
         #self.layout = QVBoxLayout(self)
