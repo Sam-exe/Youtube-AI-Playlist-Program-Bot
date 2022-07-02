@@ -1,5 +1,3 @@
-
-from tkinter.ttk import Style
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDesktopWidget, QVBoxLayout, QLabel, QLineEdit
 from PyQt5.QtGui import QIcon, QFont
 import requests
@@ -14,12 +12,6 @@ import sys
 from selenium_stealth import stealth
 import time
 import pickle
-
-
-
-    
-      
-
     
 class test():
     print('test wokr')
@@ -41,33 +33,28 @@ class PushButton(QWidget):
         options.add_argument("--window-size=500,500")
         options.add_argument("--app=http://www.google.com")
         options.add_argument('--mute-audio')
-        
+        options.add_argument("--user-data-dir=C:\\Users\\Sam\\AppData\\Local\\Google\\Chrome\\User Data")
 
-        #cookies = pickle.load(open("cookies.pkl", "rb"))
-        #for cookie in cookies:
-        #    driver.add_cookie(cookie)
-        driver = webdriver.Chrome(options=options)
-        #cookies = pickle.load(open("cookies.pkl", "rb"))
-        #for cookie in cookies:
-        #    driver.add_cookie(cookie)
-        #ui.WebDriverWait(driver, 300)
-        stealth(driver,
-            languages=["en-US", "en"],
-            user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36',
-            vendor="Google Inc.",
-            platform="Win32",
-            webgl_vendor="Intel Inc.",
-            renderer="Intel Iris OpenGL Engine",
-            fix_hairline=True,
-            )
+
+        
+        driver = webdriver.Chrome(options=options)  
+        
+        #stealth(driver,
+            #languages=["en-US", "en"],
+            #user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36',
+            #vendor="Google Inc.",
+            #platform="Win32",
+            #webgl_vendor="Intel Inc.",
+            #renderer="Intel Iris OpenGL Engine",
+            #fix_hairline=True,
+            #)
         driver.get('https://www.google.com')
-        while True:
-            pickle.dump(driver.get_cookies() , open("cookies.pkl","wb"))
-            continue
     def _execute(self):
         options = webdriver.ChromeOptions()
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
         options.add_argument("--window-size=500,500")
+        options.add_argument("user-data-dir=C:\\Users\\Username\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1")
+
         #options.add_argument("--headless")
         #options.add_argument('--disable-gpu')
         #options.add_argument("--remote-debugging-port=9222")
@@ -86,16 +73,11 @@ class PushButton(QWidget):
             renderer="Intel Iris OpenGL Engine",
             fix_hairline=True,
             )
-        Youtube_list = ['https://www.youtube.com/watch?v=0_CDMstFg7M', 'https://www.youtube.com/watch?v=0_CDMstFg7M','https://www.youtube.com/watch?v=0_CDMstFg7M']
         self.Start1 = 0
-        driver.get(Youtube_list[self.Start1])
+        driver.get(self.list[self.Start1])
         driver.get_screenshot_as_file('test.png')
         self.label('Starting')
-
-        wait = ui.WebDriverWait(driver, 300)
-        #self.hello = Start1
-        while True:
-            try:
+        try:
                 if driver.find_element(by=By.XPATH, value=("//ytd-button-renderer[2]//a[1]//tp-yt-paper-button[1]")):
                     
                     driver.find_element(by=By.XPATH, value=("//ytd-button-renderer[2]//a[1]//tp-yt-paper-button[1]")).click()
@@ -103,10 +85,14 @@ class PushButton(QWidget):
                     self.logs('Cookie Found')
                     
                     #
-            except NoSuchElementException:
+        except NoSuchElementException:
                 print('cookie not found')
                 #self.logs('No cookie screen found')
                 time.sleep(2)
+        wait = ui.WebDriverWait(driver, 300)
+        #self.hello = Start1
+        while True:
+            
             try:
                 if EC.presence_of_element_located((By.XPATH, ".//div/div/div/div/div/span/button/div[contains(text(),'skip AD')]")):  
                     button = driver.find_element(by=By.XPATH, value=".//div/div/div/div/div/span/button/div[contains(text(),'Skip Ad')]")
@@ -123,19 +109,23 @@ class PushButton(QWidget):
                 if driver.find_element(by=By.CSS_SELECTOR, value=".ytp-chrome-controls button[title=Replay]"):
                     self.logs('Video Ended')
                     print('replay found1')
-                    if self.Start1 <= len(Youtube_list):
+                    if self.Start1 <= len(self.list):
                         print('replay found2')
                         self.Start1 += 1
-                        if len(Youtube_list) <= self.Start1:
+
+                        if len(self.list) <= self.Start1:
                             self.logs('stopped')
                             print('stopped')
                             driver.close()
+                            self.label(f'all videos have been watched ({str(len(self.list))})')
                             self.close
                             
 
                         else:
-                            driver.get(Youtube_list[self.Start1])
+                            driver.get(self.list[self.Start1])
                             self.logs('Still Going')
+                            print(len(self.list))
+                            self.label(str(self.Start1) + ' / ' +  str(len(self.list)) + ' videos watched')
                             
                    
                             
@@ -254,10 +244,7 @@ class PushButton(QWidget):
             self.videos('All videos are working and are correct')
         if len(all_filled) > len(all_correct):
             self.videos('Not all videos are correct, ' + str(len(all_failed)) + '/' + str(len(all_filled)) + ' are not working')
-        print(len(all_filled))
-        print(all)
-        print(len(all))
-        print(total_done)
+        self.list = all_correct 
 
     def label(self, label):
             self.test.setText(label)
