@@ -1,3 +1,5 @@
+import undetected_chromedriver as uc
+from ast import While
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDesktopWidget, QVBoxLayout, QLabel, QLineEdit
 from PyQt5.QtGui import QIcon, QFont
 import requests
@@ -10,6 +12,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import threading
 import sys
 from selenium_stealth import stealth
+import undetected_chromedriver as uc
+
 import time
 import pickle
     
@@ -28,51 +32,29 @@ class PushButton(QWidget):
         #PushButton().Label()
         threading.Thread(target=self.GoogleSettings, daemon=True).start()
     def GoogleSettings(self):
-        options = webdriver.ChromeOptions()
-        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
-        options.add_argument("--window-size=500,500")
-        options.add_argument("--app=http://www.google.com")
-        options.add_argument('--mute-audio')
-        options.add_argument("--user-data-dir=C:\\Users\\Sam\\AppData\\Local\\Google\\Chrome\\User Data")
+        options = uc.ChromeOptions()
+        options.add_argument("--user-data-dir=C:\\Users\\Sam\\Documents\\GitHub\\Youtube-AI-Playlist-Program-Bot\\User data") 
 
-
+        #options.add_argument("start-maximized")
+        driver = uc.Chrome(options=options)
         
-        driver = webdriver.Chrome(options=options)  
         
-        #stealth(driver,
-            #languages=["en-US", "en"],
-            #user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36',
-            #vendor="Google Inc.",
-            #platform="Win32",
-            #webgl_vendor="Intel Inc.",
-            #renderer="Intel Iris OpenGL Engine",
-            #fix_hairline=True,
-            #)
-        driver.get('https://www.google.com')
     def _execute(self):
-        options = webdriver.ChromeOptions()
+        options = uc.ChromeOptions()
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
         options.add_argument("--window-size=500,500")
-        options.add_argument("user-data-dir=C:\\Users\\Username\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1")
-
+        options.add_argument("--user-data-dir=C:\\Users\\Sam\\Documents\\GitHub\\Youtube-AI-Playlist-Program-Bot\\User data")  #Path to your chrome profile
+    
+        #options.add_argument('--ignore-certificate-errors')
         #options.add_argument("--headless")
         #options.add_argument('--disable-gpu')
         #options.add_argument("--remote-debugging-port=9222")
-        #options.add_argument("--app=http://www.google.com")
+        options.add_argument("--app=http://www.google.com")
         #options.add_argument('--mute-audio')
         #cookies = pickle.load(open("cookies.pkl", "rb"))
         #for cookie in cookies:
         #    driver.add_cookie(cookie)
-        driver = webdriver.Chrome(options=options)
-        stealth(driver,
-            languages=["en-US", "en"],
-            user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36',
-            vendor="Google Inc.",
-            platform="Win32",
-            webgl_vendor="Intel Inc.",
-            renderer="Intel Iris OpenGL Engine",
-            fix_hairline=True,
-            )
+        driver = uc.Chrome(options=options)
         self.Start1 = 0
         driver.get(self.list[self.Start1])
         driver.get_screenshot_as_file('test.png')
@@ -92,10 +74,21 @@ class PushButton(QWidget):
         wait = ui.WebDriverWait(driver, 300)
         #self.hello = Start1
         while True:
-            
             try:
-                if EC.presence_of_element_located((By.XPATH, ".//div/div/div/div/div/span/button/div[contains(text(),'skip AD')]")):  
-                    button = driver.find_element(by=By.XPATH, value=".//div/div/div/div/div/span/button/div[contains(text(),'Skip Ad')]")
+                if driver.find_element(by=By.CSS_SELECTOR, value=("button[title='Afspelen (k)']")):
+
+                    driver.find_element(by=By.CSS_SELECTOR, value=("button[title='Afspelen (k)']")).click()
+                    print("ad skipped")
+                    self.logs('Video Start Button Clicke')
+                else:
+                    self.logs('No Ad')
+                    print('not found')
+            except NoSuchElementException:
+                time.sleep(2)
+                print('none found')
+            try:
+                if EC.presence_of_element_located((By.XPATH, "/html[1]/body[1]/ytd-app[1]/div[1]/ytd-page-manager[1]/ytd-watch-flexy[1]/div[5]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ytd-player[1]/div[1]/div[1]/div[4]/div[1]/div[3]/div[1]/div[2]/span[1]/button[1]/div[1]")):  
+                    button = driver.find_element(by=By.XPATH, value="/html[1]/body[1]/ytd-app[1]/div[1]/ytd-page-manager[1]/ytd-watch-flexy[1]/div[5]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ytd-player[1]/div[1]/div[1]/div[4]/div[1]/div[3]/div[1]/div[2]/span[1]/button[1]/div[1]")
                     driver.execute_script("arguments[0].click();", button)
                     print("ad skipped")
                     self.logs('Ad Skipped')
@@ -106,7 +99,7 @@ class PushButton(QWidget):
                 time.sleep(2)
                 print('none found')
             try:
-                if driver.find_element(by=By.CSS_SELECTOR, value=".ytp-chrome-controls button[title=Replay]"):
+                if driver.find_element(by=By.XPATH, value="/html[1]/body[1]/ytd-app[1]/div[1]/ytd-page-manager[1]/ytd-watch-flexy[1]/div[5]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ytd-player[1]/div[1]/div[1]/div[28]/div[2]/div[1]/button[1]"):
                     self.logs('Video Ended')
                     print('replay found1')
                     if self.Start1 <= len(self.list):
@@ -231,7 +224,8 @@ class PushButton(QWidget):
                     check_1 = requests.get(checking_url)
                     if check_1.status_code == 200:
                         print('JESSS')
-                        all_correct.append(all)
+                        all_autplay = all + '?autoplay=1'
+                        all_correct.append(all_autplay)
                     else:
                         all_failed.append(all)
                         print('not working')
